@@ -1,12 +1,12 @@
-import org.apache.spark.mllib.classification.{NaiveBayesModel, NaiveBayes}
+import org.apache.spark.SparkContext
+import org.apache.spark.mllib.classification.NaiveBayes
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.mllib.regression.LabeledPoint
-import org.apache.spark.{SparkContext, SparkConf}
 
 /**
- * Created by pradyumnad on 10/1/15.
+ * Created by pradyumnad on 10/24/15.
  */
-object iHearApp {
+object ZooApp {
 
   def generateNaiveBayesModel(sc : SparkContext) {
     val data = sc.textFile("data/mllib/gender.txt")
@@ -30,22 +30,6 @@ object iHearApp {
   }
 
   def main(args: Array[String]) {
-    println("Hello")
 
-    val conf  = new SparkConf()
-      .setAppName("iHear")
-      .setMaster("local[*]")
-
-    val sc = new SparkContext(conf)
-
-//    generateNaiveBayesModel(sc)
-
-    val sameModel = NaiveBayesModel.load(sc, "models/nbmodel")
-    val testdata = Vectors.dense(5.0, 60)
-    val prediction = sameModel.predict(testdata)
-
-    println(prediction+" is the prediction\n")
-
-    sc.stop()
   }
 }
