@@ -5,5 +5,4 @@ object iHApp {
 
   val MODEL_URI = "models"
   val DATA_URI = "data"
-  val ZOO_IP = DATA_URI+"/zoo"
 }
