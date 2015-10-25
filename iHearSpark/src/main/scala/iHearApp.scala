@@ -14,8 +14,8 @@ object iHearApp {
 
     val sc = new SparkContext(conf)
 
-    ZooApp.generateNaiveBayesModel(sc)
-    ZooApp.testApp(sc)
+    SentimentApp.generateNaiveBayesModel(sc)
+    SentimentApp.testApp(sc)
 
     sc.stop()
   }
