@@ -1,4 +1,7 @@
-import org.apache.spark.{SparkContext, SparkConf}
+package edu.umkc.ihear
+
+import apps.SentimentApp
+import org.apache.spark.{SparkConf, SparkContext}
 
 /**
  * Created by pradyumnad on 10/1/15.

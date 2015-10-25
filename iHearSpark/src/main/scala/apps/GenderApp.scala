@@ -1,7 +1,9 @@
+package apps
+
 import java.nio.file.{Files, Paths}
 
 import org.apache.spark.SparkContext
-import org.apache.spark.mllib.classification.{NaiveBayesModel, NaiveBayes}
+import org.apache.spark.mllib.classification.{NaiveBayes, NaiveBayesModel}
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.mllib.regression.LabeledPoint
 

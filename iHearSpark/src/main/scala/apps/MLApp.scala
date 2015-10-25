@@ -1,3 +1,5 @@
+package apps
+
 import org.apache.spark.SparkContext
 
 /**

@@ -1,11 +1,11 @@
-import java.nio.file.{Paths, Files}
+package apps
+
+import java.nio.file.{Files, Paths}
 
 import org.apache.spark.SparkContext
-import org.apache.spark.mllib.classification.{NaiveBayesModel, NaiveBayes}
+import org.apache.spark.mllib.classification.{NaiveBayes, NaiveBayesModel}
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.mllib.regression.LabeledPoint
-
-import scala.collection.immutable.HashMap
 
 /**
  * Created by pradyumnad on 10/24/15.
