@@ -2,6 +2,7 @@ package apps
 
 import java.nio.file.{Files, Paths}
 
+import edu.umkc.ihear.iHApp
 import org.apache.spark.SparkContext
 import org.apache.spark.mllib.classification.{NaiveBayes, NaiveBayesModel}
 import org.apache.spark.mllib.linalg.Vectors
