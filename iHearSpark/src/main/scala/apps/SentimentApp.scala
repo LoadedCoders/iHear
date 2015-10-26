@@ -52,4 +52,16 @@ object SentimentApp extends MLApp {
 
     println(Classes(prediction.toInt) + " is the prediction\n")
   }
+
+  def classify(sc: SparkContext, sentense: String): String = {
+    val sameModel = NaiveBayesModel.load(sc, ModelPath)
+
+    val tf = new HashingTF(numFeatures = 100)
+
+    val hashedWords = tf.transform(sentense.split(" "))
+
+    val prediction = sameModel.predict(hashedWords)
+
+    Classes(prediction.toInt)
+  }
 }
