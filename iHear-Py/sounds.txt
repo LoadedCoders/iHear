@@ -1,0 +1,8 @@
+sounds/bike/20150227_193806-bici-01.wav
+sounds/bike/20150227_193806-bici-02.wav
+sounds/bike/20150227_193806-bici-03.wav
+sounds/bike/20150227_193806-bici-04.wav
+sounds/blender/20150227_193606-licuadora-01.wav
+sounds/blender/20150227_193606-licuadora-02.wav
+sounds/blender/20150227_193606-licuadora-03.wav
+sounds/blender/20150227_193606-licuadora-04.wav
