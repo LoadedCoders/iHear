@@ -34,9 +34,9 @@ def showFeatures(name):
     # items = ' '.join(map(str, a))
     # print(items)
     vec = [
-        F[0:].mean(), F[1:].mean(), F[2:].mean(), F[3:].mean(), F[4:].mean(), F[5:].mean(), F[6:].mean(), F[7:].mean(),
+        F[0:].mean(), F[1:].mean(), F[4:].mean(), F[5:].mean(), F[6:].mean(), F[7:].mean(),
         F[33:].mean(),
-        F[0:].std(), F[1:].std(), F[2:].std(), F[3:].std(), F[4:].std(), F[5:].std(), F[6:].std(), F[7:].std(),
+        F[0:].std(), F[1:].std(), F[4:].std(), F[5:].std(), F[6:].std(), F[7:].std(),
         F[33:].std()
     ]
 
@@ -44,14 +44,13 @@ def showFeatures(name):
 
     melfeat = melfeature(F)
     chromafeat = chromafeature(F)
-    return vecstr
+    return vecstr + " " + chromafeat + " " + melfeat
 
 
 def melfeature(F):
     mel = [
-        F[8:].mean(), F[9:].mean(), F[10:].mean(), F[11:].mean(), F[12:].mean(), F[13:].mean(), F[14:].mean(),
-        F[15:].mean(),
-        F[8:].std(), F[9:].std(), F[10:].std(), F[11:].std(), F[12:].std(), F[13:].std(), F[14:].std(), F[15:].std()
+        F[8:].mean(), F[9:].mean(), F[10:].mean(), F[11:].mean(),
+        F[8:].std(), F[9:].std(), F[10:].std(), F[11:].std()
     ]
 
     vecstr = ' '.join(map(str, mel))

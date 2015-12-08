@@ -1,7 +1,7 @@
 import os
 
 from pyspark.mllib.evaluation import MulticlassMetrics
-from pyspark.mllib.tree import DecisionTree, RandomForest, RandomForestModel
+from pyspark.mllib.tree import DecisionTree, RandomForest, RandomForestModel, DecisionTreeModel
 from pyspark.mllib.classification import NaiveBayes
 from pyspark.mllib.linalg import Vectors
 from pyspark.mllib.regression import LabeledPoint
@@ -111,7 +111,7 @@ def generateDecisionTree():
     global model
     data = sc.textFile(F_PATH).map(parseLine)
 
-    (trainingData, testData) = data.randomSplit([0.8, 0.2])
+    (trainingData, testData) = data.randomSplit([0.7, 0.3])
 
     model = DecisionTree.trainClassifier(trainingData, numClasses=classes.__len__(), categoricalFeaturesInfo={},
                                          impurity='gini', maxDepth=5, maxBins=32)
@@ -184,8 +184,8 @@ def modelStatistics(labelsAndPredictions):
 
 
 def test(sc):
-    model = RandomForestModel.load(sc, RF_PATH)
-    # model = DecisionTreeModel.load(sc, DT_PATH)
+    # model = RandomForestModel.load(sc, RF_PATH)
+    model = DecisionTreeModel.load(sc, DT_PATH)
     files = ["sounds/flushing/20150227_193109-flushing-04.wav",
              "sounds/bike/20150227_193806-bici-14.wav",
              "sounds/blender/20150227_193606-licuadora-14.wav"
@@ -211,7 +211,7 @@ if __name__ == '__main__':
     generateTrainTextFile()
 
     generateFeatures()
-    # generateDecisionTree()
+    generateDecisionTree()
     generateRandomForest()
 
     test(sc)
