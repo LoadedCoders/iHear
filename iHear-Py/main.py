@@ -113,7 +113,7 @@ def generateDecisionTree():
     global model
     data = sc.textFile(F_PATH).map(parseLine)
 
-    (trainingData, testData) = data.randomSplit([0.7, 0.3])
+    (trainingData, testData) = data.randomSplit([0.9, 0.1], seed=1L)
 
     model = DecisionTree.trainClassifier(trainingData, numClasses=classes.__len__(), categoricalFeaturesInfo={},
                                          impurity='gini', maxDepth=5, maxBins=32)
@@ -125,7 +125,6 @@ def generateDecisionTree():
 
     print('Learned classification tree model:')
     print(model.toDebugString())
-    print(model.labels)
 
     modelStatistics(labelsAndPredictions)
 
@@ -141,7 +140,7 @@ def generateRandomForest():
 
     data = sc.textFile(F_PATH).map(parseLine)
 
-    (trainingData, testData) = data.randomSplit([0.7, 0.3])
+    (trainingData, testData) = data.randomSplit([0.8, 0.2], seed=1L)
 
     # Train a RandomForest model.
     #  Note: Use larger numTrees in practice.
@@ -157,7 +156,6 @@ def generateRandomForest():
     print('Test Error', str(testErr))
     print('Learned classification forest model:')
     print(model.toDebugString())
-    print(model.labels)
 
     modelStatistics(labelsAndPredictions)
 
@@ -195,6 +193,8 @@ def test(sc):
 
     rfmodel = RandomForestModel.load(sc, RF_PATH)
     dtmodel = DecisionTreeModel.load(sc, DT_PATH)
+
+    print dtmodel.toDebugString()
     for f in files:
         vec = audio.showFeatures(f)
         testfeatures = Vectors.dense([float(x) for x in vec.split(' ')])
