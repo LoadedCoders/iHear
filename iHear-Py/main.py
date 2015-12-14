@@ -1,7 +1,7 @@
 import os
 
 from pyspark.mllib.evaluation import MulticlassMetrics
-from pyspark.mllib.tree import DecisionTree, RandomForest, RandomForestModel, DecisionTreeModel
+from pyspark.mllib.tree import DecisionTree, RandomForest, DecisionTreeModel, RandomForestModel
 from pyspark.mllib.classification import NaiveBayes
 from pyspark.mllib.linalg import Vectors
 from pyspark.mllib.regression import LabeledPoint
@@ -58,7 +58,7 @@ def fetchFeatures(filepath):
     print(filepath)
     paths = filepath.split("/")
     c = classes.index(paths[1])
-    print(paths[1], c)
+    # print(paths[1], c)
 
     vec = audio.showFeatures(filepath)
     return str(c) + "," + vec
@@ -91,16 +91,18 @@ def generateNBModel():
 
     global model
     data = sc.textFile(F_PATH).map(parseLine)
-    # Split data aproximately into training (60%) and test (40%)
-    # training, test = data.randomSplit([0.6, 0.4], seed=0)
+
+    training, test = data.randomSplit([0.7, 0.3], seed=0)
     # Train a naive Bayes model.
-    model = NaiveBayes.train(data, 0.1)
+    model = NaiveBayes.train(training, 0.1)
     # Make prediction and test accuracy.
-    # predictionAndLabel = test.map(lambda p: (model.predict(p.features), p.label))
-    # accuracy = 1.0 * predictionAndLabel.filter(lambda (x, v): x == v).count() / test.count()
-    # print(accuracy)
+    labelsAndPredictions = test.map(lambda p: (model.predict(p.features), p.label))
+    accuracy = 1.0 * labelsAndPredictions.filter(lambda (x, v): x != v).count() / test.count()
+    print('Test Error = ', accuracy)
+    modelStatistics(labelsAndPredictions)
     # Save and load model
     model.save(sc, NB_PATH)
+    print("Naive Bayes model saved!")
 
 
 def generateDecisionTree():
@@ -123,6 +125,7 @@ def generateDecisionTree():
 
     print('Learned classification tree model:')
     print(model.toDebugString())
+    print(model.labels)
 
     modelStatistics(labelsAndPredictions)
 
@@ -138,13 +141,13 @@ def generateRandomForest():
 
     data = sc.textFile(F_PATH).map(parseLine)
 
-    (trainingData, testData) = data.randomSplit([0.8, 0.2])
+    (trainingData, testData) = data.randomSplit([0.7, 0.3])
 
     # Train a RandomForest model.
     #  Note: Use larger numTrees in practice.
     #  Setting featureSubsetStrategy="auto" lets the algorithm choose.
     model = RandomForest.trainClassifier(trainingData, numClasses=classes.__len__(), categoricalFeaturesInfo={},
-                                         numTrees=5, featureSubsetStrategy="auto",
+                                         numTrees=4, featureSubsetStrategy="auto",
                                          impurity='gini', maxDepth=4, maxBins=32)
 
     # Evaluate model on test instances and compute test error
@@ -154,6 +157,7 @@ def generateRandomForest():
     print('Test Error', str(testErr))
     print('Learned classification forest model:')
     print(model.toDebugString())
+    print(model.labels)
 
     modelStatistics(labelsAndPredictions)
 
@@ -184,19 +188,21 @@ def modelStatistics(labelsAndPredictions):
 
 
 def test(sc):
-    # model = RandomForestModel.load(sc, RF_PATH)
-    model = DecisionTreeModel.load(sc, DT_PATH)
     files = ["sounds/flushing/20150227_193109-flushing-04.wav",
              "sounds/bike/20150227_193806-bici-14.wav",
              "sounds/blender/20150227_193606-licuadora-14.wav"
              ]
 
+    rfmodel = RandomForestModel.load(sc, RF_PATH)
+    dtmodel = DecisionTreeModel.load(sc, DT_PATH)
     for f in files:
         vec = audio.showFeatures(f)
         testfeatures = Vectors.dense([float(x) for x in vec.split(' ')])
         print(vec)
-        pred = model.predict(testfeatures)
-        print("Prediction is " + str(pred), classes[int(pred)])
+        pred = dtmodel.predict(testfeatures)
+        print("DT Prediction is " + str(pred), classes[int(pred)])
+        pred = rfmodel.predict(testfeatures)
+        print("RF Prediction is " + str(pred), classes[int(pred)])
         # print(classes)
 
 

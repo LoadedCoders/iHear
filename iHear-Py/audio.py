@@ -2,6 +2,7 @@ import os
 
 from pyAudioAnalysis import audioBasicIO
 from pyAudioAnalysis import audioFeatureExtraction
+import matplotlib.pyplot as plt
 
 INPUT_DIR = "sounds"
 
@@ -33,24 +34,22 @@ def showFeatures(name):
     # plt.show()
     # items = ' '.join(map(str, a))
     # print(items)
+    # print("--", F[0, :])
     vec = [
-        F[0:].mean(), F[1:].mean(), F[4:].mean(), F[5:].mean(), F[6:].mean(), F[7:].mean(),
-        F[33:].mean(),
-        F[0:].std(), F[1:].std(), F[4:].std(), F[5:].std(), F[6:].std(), F[7:].std(),
-        F[33:].std()
+        F[0, :].mean(), F[1, :].mean(), F[4, :].mean(), F[5, :].mean(), F[6, :].mean(), F[7, :].mean(),
+        F[0, :].std(), F[1, :].std(), F[4, :].std(), F[5, :].std(), F[6, :].std(), F[7, :].std()
     ]
 
     vecstr = ' '.join(map(str, vec))
 
     melfeat = melfeature(F)
-    chromafeat = chromafeature(F)
-    return vecstr + " " + chromafeat + " " + melfeat
+    # chromafeat = chromafeature(F)
+    return vecstr + " " + melfeat
 
 
 def melfeature(F):
     mel = [
-        F[8:].mean(), F[9:].mean(), F[10:].mean(), F[11:].mean(),
-        F[8:].std(), F[9:].std(), F[10:].std(), F[11:].std()
+        F[8, :].mean(), F[9, :].mean(), F[10, :].mean(), F[11, :].mean()
     ]
 
     vecstr = ' '.join(map(str, mel))
@@ -59,8 +58,8 @@ def melfeature(F):
 
 def chromafeature(F):
     chroma = [
-        F[31:].mean(), F[32:].mean(),
-        F[31:].std(), F[32:].std()
+        F[31, :].mean(), F[32, :].mean(),
+        F[31, :].std(), F[32, :].std()
     ]
 
     vecstr = ' '.join(map(str, chroma))
