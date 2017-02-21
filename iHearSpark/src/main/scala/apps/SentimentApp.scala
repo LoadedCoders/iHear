@@ -2,6 +2,7 @@ package apps
 
 import java.nio.file.{Files, Paths}
 
+import edu.umkc.helpers.ModelEvaluation
 import edu.umkc.ihear.iHApp
 import org.apache.spark.SparkContext
 import org.apache.spark.mllib.classification.{NaiveBayes, NaiveBayesModel}
@@ -34,10 +35,20 @@ object SentimentApp extends MLApp {
       LabeledPoint(parts(0).trim.toDouble, hashedWords)
     }
 
-    val model = NaiveBayes.train(parsedData, lambda = 0.1, modelType = "multinomial")
+    // Split data into training (60%) and test (40%).
+    val splits = parsedData.randomSplit(Array(0.6, 0.4), seed = 11L)
+    val training = splits(0)
+    val test = splits(1)
+
+    val model = NaiveBayes.train(training, lambda = 0.1, modelType = "multinomial")
+
+    val predictionAndLabel = test.map(p => (model.predict(p.features), p.label))
+    val accuracy = 1.0 * predictionAndLabel.filter(x => x._1 == x._2).count() / test.count()
+    println("Accuracy "+accuracy)
+    ModelEvaluation.evaluateModel(predictionAndLabel)
 
     // Save and load model
-    model.save(sc, ModelPath)
+//    model.save(sc, ModelPath)
     println(model.labels.mkString(" "))
   }
 

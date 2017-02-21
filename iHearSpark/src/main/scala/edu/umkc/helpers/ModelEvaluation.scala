@@ -12,6 +12,11 @@ object ModelEvaluation {
     val metrics = new MulticlassMetrics(predictionAndLabels)
     val cfMatrix = metrics.confusionMatrix
     println(" |== Confusion matrix ==|")
-    println(metrics.labels.mkString("\t"))
+    println(cfMatrix)
+    println(metrics.fMeasure)
+    for (label <- metrics.labels) {
+      println(label+" - "+metrics.fMeasure(label))
+    }
+    //    println(metrics.labels.mkString("\t"))
   }
 }
